@@ -19,21 +19,26 @@ private ImageIcon likeicon;
 private JButton doubleClick;
 private int clickValue;
 private boolean doubleUsed;
-
-
+private JButton autoClick;
+private int infin;
+private int autoLimit;
 
 	public PanelGUI(ControllerGUI baseController) 
 	{
 		this.baseController = baseController;
 		
-		doubleUsed = false;
-		clickValue = 1;
+		autoLimit = 1;
+		infin = -1;
+		doubleUsed = false;//
+		clickValue = 1;//
+		autoClick = new JButton("Auto Click;100c");//
 		doubleClick = new JButton("Double Click:10C");//
 	    firstButton = new JButton("click");//
 		firstTextField = new JTextField("Likes:");//
 		firstTextField.setBackground(Color.decode("#00e5b1"));//
 		firstTextField.setEditable(false);//
 		baseLayout = new SpringLayout();//
+		
 		
 		
 		setupPanel();
@@ -43,6 +48,7 @@ private boolean doubleUsed;
 
 	private void setupPanel()
 	{
+		this.add(autoClick);
 		this.add(doubleClick);
 		this.setLayout(baseLayout);
 		this.add(firstButton);
@@ -60,6 +66,8 @@ private boolean doubleUsed;
 		baseLayout.putConstraint(SpringLayout.NORTH, doubleClick, 65, SpringLayout.NORTH, this);
 		baseLayout.putConstraint(SpringLayout.WEST, doubleClick, 10, SpringLayout.WEST, this);
 		firstButton.setVerticalAlignment(SwingConstants.TOP);
+		baseLayout.putConstraint(SpringLayout.NORTH, autoClick, 14, SpringLayout.SOUTH, doubleClick);
+		baseLayout.putConstraint(SpringLayout.WEST, autoClick, 10, SpringLayout.WEST, this);
 		
 		
 	}
@@ -87,10 +95,38 @@ private boolean doubleUsed;
 					doubleUsed = true;
 					firstTextField.setText("likes: "+likes);
 					doubleClick.setBackground(Color.decode("#696868"));
+					doubleClick.setEnabled(false);
 				}
 			}
 		});
 		
+		autoClick.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent click)
+					{
+						if(likes >= 100 && autoLimit >=2)
+						{
+							
+							while(likes != infin)// crashes program
+							{
+								try
+								{
+									Thread.sleep(2000);
+									likes = likes + 1;
+								}
+								catch(InterruptedException ex) {
+								    Thread.currentThread().interrupt();
+								}
+								
+								
+							}
+							
+							likes = likes-100;
+							firstTextField.setText("likes: "+likes);
+						}
+					}
+			
+				});
 		
 	}
 	
