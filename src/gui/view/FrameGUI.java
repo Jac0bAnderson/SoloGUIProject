@@ -21,7 +21,7 @@ private ControllerGUI  baseController;
 		this.setSize(400,400);
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setTitle("You Up clik Like");
+		this.setTitle("FaceBook sim");
 		
 	}
 	 public ControllerGUI getBaseController()
