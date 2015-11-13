@@ -15,29 +15,43 @@ private ControllerGUI baseController;
 private JButton firstButton;
 private JTextField firstTextField;
 private SpringLayout baseLayout;
-private ImageIcon likeicon;
+
 private JButton doubleClick;
 private int clickValue;
 private boolean doubleUsed;
-private JButton autoClick;
-private int infin;
-private int autoLimit;
+private int color1;
+private int color2;
+private int color3;
+private JButton tripleClick;
+private boolean tripleUsed;
+private JTextField yourClickValue;
+
+
 
 	public PanelGUI(ControllerGUI baseController) 
 	{
 		this.baseController = baseController;
 		
-		autoLimit = 1;
-		infin = -1;
+		tripleUsed = false;
 		doubleUsed = false;//
 		clickValue = 1;//
-		autoClick = new JButton("Auto Click;100c");//
+		
+		//RGB
+		color1 = 0;
+		color2 = 255;
+		color3 = 197;
+		
+		yourClickValue = new JTextField("Click value: "+clickValue);
+		yourClickValue.setEditable(false);
+		tripleClick = new JButton("Triple Click:200C");//
 		doubleClick = new JButton("Double Click:10C");//
 	    firstButton = new JButton("click");//
 		firstTextField = new JTextField("Likes:");//
 		firstTextField.setBackground(Color.decode("#00e5b1"));//
 		firstTextField.setEditable(false);//
-		baseLayout = new SpringLayout();//
+		baseLayout = new SpringLayout();
+		
+		
 		
 		
 		
@@ -48,12 +62,13 @@ private int autoLimit;
 
 	private void setupPanel()
 	{
-		this.add(autoClick);
+		this.add(yourClickValue);
+		this.add(tripleClick);
 		this.add(doubleClick);
 		this.setLayout(baseLayout);
 		this.add(firstButton);
 		this.add(firstTextField);
-		this.setBackground(Color.decode("#00ffc5"));
+		this.setBackground(new Color(color1,color2,color3));
 	}
 	
 	private void setupLayout()//trash bin of design tab junk
@@ -66,8 +81,10 @@ private int autoLimit;
 		baseLayout.putConstraint(SpringLayout.NORTH, doubleClick, 65, SpringLayout.NORTH, this);
 		baseLayout.putConstraint(SpringLayout.WEST, doubleClick, 10, SpringLayout.WEST, this);
 		firstButton.setVerticalAlignment(SwingConstants.TOP);
-		baseLayout.putConstraint(SpringLayout.NORTH, autoClick, 14, SpringLayout.SOUTH, doubleClick);
-		baseLayout.putConstraint(SpringLayout.WEST, autoClick, 10, SpringLayout.WEST, this);
+		baseLayout.putConstraint(SpringLayout.NORTH, tripleClick, 6, SpringLayout.SOUTH, doubleClick);
+		baseLayout.putConstraint(SpringLayout.WEST, tripleClick, 0, SpringLayout.WEST, doubleClick);
+		baseLayout.putConstraint(SpringLayout.NORTH, yourClickValue, -3, SpringLayout.NORTH, firstButton);
+		baseLayout.putConstraint(SpringLayout.WEST, yourClickValue, 6, SpringLayout.EAST, firstButton);
 		
 		
 	}
@@ -80,6 +97,12 @@ private int autoLimit;
 			{
 			 likes = likes+clickValue;
 				firstTextField.setText("likes: "+likes);
+				
+				color1 = (int) (Math.random()*256);
+				color2 = (int) (Math.random()*256);
+				color3 = (int) (Math.random()*256);
+				
+				
 			}
 		});
 		
@@ -90,43 +113,35 @@ private int autoLimit;
 				
 				if(likes >= 10 && doubleUsed == false )
 				{
-					clickValue =2;
+					clickValue =clickValue + 1;
 					likes = likes-10;
 					doubleUsed = true;
 					firstTextField.setText("likes: "+likes);
 					doubleClick.setBackground(Color.decode("#696868"));
 					doubleClick.setEnabled(false);
+					yourClickValue.setText("Click Value: "+clickValue);
 				}
 			}
 		});
 		
-		autoClick.addActionListener(new ActionListener()
+		tripleClick.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				if(likes >= 200 && tripleUsed == false)
 				{
-					public void actionPerformed(ActionEvent click)
-					{
-						if(likes >= 100 && autoLimit >=2)
-						{
-							
-							while(likes != infin)// crashes program
-							{
-								try
-								{
-									Thread.sleep(2000);
-									likes = likes + 1;
-								}
-								catch(InterruptedException ex) {
-								    Thread.currentThread().interrupt();
-								}
-								
-								
-							}
-							
-							likes = likes-100;
-							firstTextField.setText("likes: "+likes);
-						}
-					}
-			
-				});
+					clickValue = clickValue +3;
+					yourClickValue.setText("Click Value: "+clickValue);
+					tripleUsed= true;
+					likes= likes - 200;
+					firstTextField.setText("Likes: "+likes);
+					tripleClick.setBackground(Color.decode("#696868"));
+					tripleClick.setEnabled(false);
+				}
+			}
+		});
+		
+		
 		
 	}
 	
