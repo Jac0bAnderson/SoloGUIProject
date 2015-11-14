@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 //import java.awt.Toolkit;
 //import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.util.Scanner;
 
 public class PanelGUI extends JPanel
 {
@@ -32,6 +34,12 @@ private JTextField RGBcolor;
 private JButton simpleMode;
 private boolean simpleUsed;
 private boolean simpleUsed2;
+private JButton saveButton;
+private JButton reloadButton;
+private Scanner reload;
+private int likesFile;
+
+
 
 
 
@@ -47,6 +55,8 @@ private boolean simpleUsed2;
 		clickValue = 1;//
 		simpleUsed = false;//
 		simpleUsed2 = false;//
+		likesFile = 0;
+		likes =0;
 		
 		
 		//RGB
@@ -54,6 +64,8 @@ private boolean simpleUsed2;
 		color2 = 255;
 		color3 = 197;
 		
+		reloadButton = new JButton("Restore Clicks");
+		saveButton = new JButton("Save");
 		simpleMode = new JButton("Simple");
 		RGBcolor = new JTextField("R: " +color1+ " G: " +color2+ " B: " +color3);//
 		RGBcolor.setOpaque(false);//
@@ -77,6 +89,8 @@ private boolean simpleUsed2;
 		
 		
 		
+		
+		
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -86,6 +100,8 @@ private boolean simpleUsed2;
 
 	private void setupPanel()
 	{
+		this.add(reloadButton);
+		this.add(saveButton);
 		this.add(simpleMode);
 		this.add(RGBcolor);
 		
@@ -102,26 +118,29 @@ private boolean simpleUsed2;
 	
 	private void setupLayout()//trash bin of design tab junk
 	{
-		baseLayout.putConstraint(SpringLayout.NORTH, firstTextField, 94, SpringLayout.SOUTH, clickerButton);
 		baseLayout.putConstraint(SpringLayout.NORTH, clickerButton, 21, SpringLayout.NORTH, this);
-		baseLayout.putConstraint(SpringLayout.WEST, clickerButton, 0, SpringLayout.WEST, firstTextField);
-		baseLayout.putConstraint(SpringLayout.WEST, firstTextField, 151, SpringLayout.WEST, this);
-		baseLayout.putConstraint(SpringLayout.EAST, firstTextField, -133, SpringLayout.EAST, this);
-		baseLayout.putConstraint(SpringLayout.NORTH, doubleClick, 65, SpringLayout.NORTH, this);
-		baseLayout.putConstraint(SpringLayout.WEST, doubleClick, 10, SpringLayout.WEST, this);
 		clickerButton.setVerticalAlignment(SwingConstants.TOP);
-		baseLayout.putConstraint(SpringLayout.NORTH, yourClickValue, -3, SpringLayout.NORTH, clickerButton);
-		baseLayout.putConstraint(SpringLayout.WEST, yourClickValue, 6, SpringLayout.EAST, clickerButton);
 		baseLayout.putConstraint(SpringLayout.WEST, autoClick, 12, SpringLayout.WEST, this);
-		baseLayout.putConstraint(SpringLayout.NORTH, tripleClick, 6, SpringLayout.SOUTH, autoClick);
-		baseLayout.putConstraint(SpringLayout.WEST, tripleClick, 0, SpringLayout.WEST, autoClick);
 		baseLayout.putConstraint(SpringLayout.NORTH, autoClick, 6, SpringLayout.SOUTH, doubleClick);
-		baseLayout.putConstraint(SpringLayout.NORTH, RGBcolor, 12, SpringLayout.SOUTH, firstTextField);
-		baseLayout.putConstraint(SpringLayout.WEST, RGBcolor, 0, SpringLayout.WEST, clickerButton);
-		baseLayout.putConstraint(SpringLayout.NORTH, simpleMode, -1, SpringLayout.NORTH, yourClickValue);
+		baseLayout.putConstraint(SpringLayout.WEST, saveButton, 31, SpringLayout.EAST, yourClickValue);
+		baseLayout.putConstraint(SpringLayout.WEST, yourClickValue, 10, SpringLayout.EAST, clickerButton);
+		baseLayout.putConstraint(SpringLayout.SOUTH, yourClickValue, 0, SpringLayout.SOUTH, clickerButton);
+		baseLayout.putConstraint(SpringLayout.WEST, firstTextField, 28, SpringLayout.EAST, doubleClick);
+		baseLayout.putConstraint(SpringLayout.EAST, firstTextField, -133, SpringLayout.EAST, this);
+		baseLayout.putConstraint(SpringLayout.NORTH, RGBcolor, 6, SpringLayout.SOUTH, firstTextField);
+		baseLayout.putConstraint(SpringLayout.WEST, RGBcolor, 10, SpringLayout.WEST, clickerButton);
+		baseLayout.putConstraint(SpringLayout.EAST, RGBcolor, -10, SpringLayout.EAST, firstTextField);
+		baseLayout.putConstraint(SpringLayout.NORTH, firstTextField, 0, SpringLayout.NORTH, doubleClick);
+		baseLayout.putConstraint(SpringLayout.NORTH, doubleClick, 109, SpringLayout.NORTH, this);
+		baseLayout.putConstraint(SpringLayout.SOUTH, tripleClick, -18, SpringLayout.NORTH, doubleClick);
+		baseLayout.putConstraint(SpringLayout.EAST, tripleClick, 0, SpringLayout.EAST, doubleClick);
+		baseLayout.putConstraint(SpringLayout.WEST, doubleClick, 10, SpringLayout.WEST, this);
+		baseLayout.putConstraint(SpringLayout.NORTH, saveButton, 17, SpringLayout.NORTH, this);
+		baseLayout.putConstraint(SpringLayout.WEST, clickerButton, 78, SpringLayout.EAST, simpleMode);
+		baseLayout.putConstraint(SpringLayout.NORTH, simpleMode, 10, SpringLayout.NORTH, this);
 		baseLayout.putConstraint(SpringLayout.WEST, simpleMode, 10, SpringLayout.WEST, this);
-		baseLayout.putConstraint(SpringLayout.EAST, RGBcolor, 111, SpringLayout.WEST, clickerButton);
-		
+		baseLayout.putConstraint(SpringLayout.NORTH, reloadButton, 6, SpringLayout.SOUTH, saveButton);
+		baseLayout.putConstraint(SpringLayout.EAST, reloadButton, -66, SpringLayout.EAST, this);
 		
 	}
 	
@@ -259,9 +278,41 @@ private boolean simpleUsed2;
 				}
 			});
 		
+		saveButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				fileWrite();
+			}
+		});
 		
-		
-		
+		reloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				try{
+				Scanner reload = new Scanner(new File("/users/Jacob Anderson/Desktop/LikeAmount.txt"));
+				System.out.println(reload.nextLine());
+				 PrintStream backupSystemOut = System.out;
+				 
+			     
+			      ByteArrayOutputStream out = new ByteArrayOutputStream();
+			      PrintStream stringStream = new PrintStream(out);
+			      System.setOut(stringStream);
+			 
+			      
+			      System.out.println(reload.nextLine());
+			      String likesFile = out.toString();
+			 
+			      
+			      System.setOut(backupSystemOut);
+			      System.out.println("here we go: " + likesFile);
+				}
+				catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		
 		
@@ -269,7 +320,31 @@ private boolean simpleUsed2;
 		
 	}
 	
-	
+	public void fileWrite()
+	{
+		try {
+
+			int content = likes;
+
+			File file = new File("/users/Jacob Anderson/Desktop/LikeAmount.txt");
+
+			// if file doesn't exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.close();
+
+			System.out.println("the deed is done");
+			System.out.println(likes);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
