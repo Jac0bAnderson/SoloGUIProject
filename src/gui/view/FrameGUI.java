@@ -12,7 +12,10 @@ private ControllerGUI  baseController;
 	{
 		this.baseController = baseController;
 		basePanel = new PanelGUI(baseController);
+		
+		
 		setupFrame();
+		
 	}
 
 	private void setupFrame() 
@@ -24,6 +27,8 @@ private ControllerGUI  baseController;
 		this.setTitle("FaceBook sim");
 		
 	}
+	
+	
 	 public ControllerGUI getBaseController()
 	 {
 		 return baseController;
