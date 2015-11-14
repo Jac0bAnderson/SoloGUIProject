@@ -6,7 +6,8 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import javax.swing.JPanel;
+import java.awt.Toolkit;
+import java.util.concurrent.TimeUnit;
 
 public class PanelGUI extends JPanel
 {
@@ -25,6 +26,10 @@ private int color3;
 private JButton tripleClick;
 private boolean tripleUsed;
 private JTextField yourClickValue;
+private JButton autoClick;
+private boolean autoClickUsed;
+
+
 
 
 
@@ -36,20 +41,26 @@ private JTextField yourClickValue;
 		doubleUsed = false;//
 		clickValue = 1;//
 		
+		
+		
 		//RGB
 		color1 = 0;
 		color2 = 255;
 		color3 = 197;
 		
+		autoClickUsed= false;
+		autoClick = new JButton("auto click:10000C");//
 		yourClickValue = new JTextField("Click value: "+clickValue);
 		yourClickValue.setEditable(false);
+		yourClickValue.setOpaque(false);		
 		tripleClick = new JButton("Triple Click:200C");//
 		doubleClick = new JButton("Double Click:10C");//
 	    firstButton = new JButton("click");//
 		firstTextField = new JTextField("Likes:");//
 		firstTextField.setBackground(Color.decode("#00e5b1"));//
 		firstTextField.setEditable(false);//
-		baseLayout = new SpringLayout();
+		baseLayout = new SpringLayout();//
+		
 		
 		
 		
@@ -60,8 +71,11 @@ private JTextField yourClickValue;
 		setupListeners();
 		}
 
+	
+
 	private void setupPanel()
 	{
+		this.add(autoClick);
 		this.add(yourClickValue);
 		this.add(tripleClick);
 		this.add(doubleClick);
@@ -81,10 +95,12 @@ private JTextField yourClickValue;
 		baseLayout.putConstraint(SpringLayout.NORTH, doubleClick, 65, SpringLayout.NORTH, this);
 		baseLayout.putConstraint(SpringLayout.WEST, doubleClick, 10, SpringLayout.WEST, this);
 		firstButton.setVerticalAlignment(SwingConstants.TOP);
-		baseLayout.putConstraint(SpringLayout.NORTH, tripleClick, 6, SpringLayout.SOUTH, doubleClick);
-		baseLayout.putConstraint(SpringLayout.WEST, tripleClick, 0, SpringLayout.WEST, doubleClick);
 		baseLayout.putConstraint(SpringLayout.NORTH, yourClickValue, -3, SpringLayout.NORTH, firstButton);
 		baseLayout.putConstraint(SpringLayout.WEST, yourClickValue, 6, SpringLayout.EAST, firstButton);
+		baseLayout.putConstraint(SpringLayout.WEST, autoClick, 12, SpringLayout.WEST, this);
+		baseLayout.putConstraint(SpringLayout.NORTH, tripleClick, 6, SpringLayout.SOUTH, autoClick);
+		baseLayout.putConstraint(SpringLayout.WEST, tripleClick, 0, SpringLayout.WEST, autoClick);
+		baseLayout.putConstraint(SpringLayout.NORTH, autoClick, 6, SpringLayout.SOUTH, doubleClick);
 		
 		
 	}
@@ -101,6 +117,9 @@ private JTextField yourClickValue;
 				color1 = (int) (Math.random()*256);
 				color2 = (int) (Math.random()*256);
 				color3 = (int) (Math.random()*256);
+				
+				  setBackground(new Color(color1, color2, color3));
+				  firstTextField.setBackground(new Color(color1, color2, color3));
 				
 				
 			}
@@ -124,13 +143,39 @@ private JTextField yourClickValue;
 			}
 		});
 		
+		
+		autoClick.addActionListener(new ActionListener()
+				{
+			      public void actionPerformed(ActionEvent click)
+			      {
+			    	  if(likes >= 10000 && autoClickUsed == false)
+			    	  {
+			    		  likes = likes - 50;
+			    		  firstTextField.setText("likes: "+likes);
+			    		  autoClick.setBackground(Color.decode("#696868"));
+			    		  autoClick.setEnabled(false);
+			    		  
+			    		  while(true)
+			    		  {
+			    			  
+			    		  }
+			    	  }
+			      }
+			
+				});
+		
+		
+		
+		
+		
+		
 		tripleClick.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent click)
 			{
 				if(likes >= 200 && tripleUsed == false)
 				{
-					clickValue = clickValue +3;
+					clickValue = clickValue +2;
 					yourClickValue.setText("Click Value: "+clickValue);
 					tripleUsed= true;
 					likes= likes - 200;
@@ -140,6 +185,8 @@ private JTextField yourClickValue;
 				}
 			}
 		});
+		
+		
 		
 		
 		
